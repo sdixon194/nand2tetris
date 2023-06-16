@@ -15,12 +15,6 @@ class CompilationEngine {
 	private $VMWriter = '';
 	private $className = '';
 	private $classTable = array();
-	private $varKinds = array(
-		'static',
-		'field',
-		'arg',
-		'var'
-	);
 	private $varTypes = array(
 		'int',
 		'char',
@@ -28,7 +22,6 @@ class CompilationEngine {
 		'void'
 	);
 	private $subroutineTable = array();
-	private $outputHandle = '';
 	private $file = '';
 	private $lineIndex = '';
 	private $lines = array();
@@ -38,29 +31,7 @@ class CompilationEngine {
 	private $nextRawToken = '';
 	private $nextTokenType = '';
 	private $nextToken = '';
-	private $prevRawToken = '';
-	private $prevTokenType = '';
 	private $prevToken = '';
-	private $tabs = '';
-	private $termSymbols = array(
-		')',
-		';',
-		']',
-		'+',
-		'-',
-		'*',
-		'/',
-		'&',
-		'|',
-		'<',
-		'>',
-		'=',
-		',',
-		'}',
-		'&lt;',
-		'&gt;',
-		'&amp;'
-	);
 
 	/**
 	 * Constructor
@@ -72,17 +43,6 @@ class CompilationEngine {
 		$this->VMWriter = new VMWriter( $outputFile );
 		$this->classTable = new SymbolTable();
 		$this->subroutineTable = new SymbolTable();
-	}
-
-	/** Adds spaces */
-	private function addSpaces() {
-		$this->tabs .= '  ';
-	}
-
-
-	/** Removes spaces */
-	private function removeSpaces() {
-		$this->tabs = substr( $this->tabs, 0, -2 );
 	}
 
 	/**
@@ -131,8 +91,6 @@ class CompilationEngine {
 	
 	/** Advance the line index and set the current token and type */
 	private function advance() {
-		$this->prevRawToken = $this->currentRawToken;
-		$this->prevTokenType = $this->currentTokenType;
 		$this->prevToken = $this->currentToken;
 		$this->lineIndex++;
 		if ( isset( $this->lines[ $this->lineIndex ] ) ) {
@@ -173,9 +131,6 @@ class CompilationEngine {
 	 */
 	private function compileClass() {
 		$writingClass = true;
-		$this->writeHeaderOpen( 'class' );
-		$this->addSpaces();
-		$this->writeToken( $this->currentTokenType, $this->currentToken );
 		while ( $writingClass ) {
 			$this->advance();
 			switch ( $this->currentToken ) {
@@ -200,14 +155,11 @@ class CompilationEngine {
 				default:
 					$this->writeToken( $this->currentTokenType, $this->currentToken );
 					if ( $this->currentTokenType == 'identifier' ) {
-						$this->writeIdentify( $this->currentToken, 'class', 'n/a');
 						$this->className = $this->currentToken;
 					}
 					break;
 			}
 		}
-		$this->removeSpaces();
-		$this->writeHeaderClose( 'class' );
 	}
 
 	/**
@@ -215,9 +167,6 @@ class CompilationEngine {
 	 */
 	private function compileClassVarDec() {
 		$writingClassVarDec = true;
-		$this->writeHeaderOpen( 'classVarDec' );
-		$this->addSpaces();
-		$this->writeToken( $this->currentTokenType, $this->currentToken );
 		$classVarSet = array(
 			'kind' => $this->currentToken,
 			'type' => $this->nextToken,
@@ -227,21 +176,15 @@ class CompilationEngine {
 			$this->advance();
 			switch ( $this->currentToken ) {
 				case ',':
-					$this->writeToken( $this->currentTokenType, $this->currentToken );
 					break;
 				case ';':
-					$this->writeToken( $this->currentTokenType, $this->currentToken );
 					$writingClassVarDec = false;
 					break;
 				default:
-					$this->writeToken( $this->currentTokenType, $this->currentToken );
 					if ( $this->currentTokenType == 'identifier' ) {
 						if ( in_array( $this->prevToken, $this->varTypes ) || $this->prevToken == ',' ) {
 							$classVarSet['name'] = $this->currentToken;
 							$this->classTable->define( $classVarSet['name'], $classVarSet['type'], $classVarSet['kind'] );
-							$length = count( $this->classTable->table );
-							$arrayElement = $this->classTable->table[ $length - 1 ];
-							$this->writeIdentify( $arrayElement['name'], $arrayElement['kind'], $arrayElement['index'] );
 						} else {
 							$this->varTypes[] = $this->currentToken;
 						}
@@ -337,10 +280,8 @@ class CompilationEngine {
 					$writingParameterList = false;
 					break;
 				case ',':
-					$this->writeToken( $this->currentTokenType, $this->currentToken );
 					break;
 				default:
-					$this->writeToken( $this->currentTokenType, $this->currentToken );
 					if ( $this->currentTokenType == 'identifier' && ! in_array($this->currentToken, $this->varTypes ) ) {
 						$this->subroutineTable->define( $this->currentToken, $this->prevToken, 'arg' );
 					}
@@ -354,9 +295,6 @@ class CompilationEngine {
 	 */
 	private function compileVarDec() {
 		$writingVarDec = true;
-		$this->writeHeaderOpen( 'varDec' );
-		$this->addSpaces();
-		$this->writeToken( $this->currentTokenType, $this->currentToken );
 		$classVarSet = array(
 			'kind' => $this->currentToken,
 			'type' => $this->nextToken,
@@ -366,11 +304,9 @@ class CompilationEngine {
 			$this->advance();
 			switch ( $this->currentToken ) {
 				case ';':
-					$this->writeToken( $this->currentTokenType, $this->currentToken );
 					$writingVarDec = false;
 					break;
 				case ',':
-					$this->writeToken( $this->currentTokenType, $this->currentToken );
 					break;
 				default:
 					if ( $this->currentTokenType == 'identifier' ) {
@@ -384,8 +320,6 @@ class CompilationEngine {
 					break;
 			}
 		}
-		$this->removeSpaces();
-		$this->writeHeaderClose( 'varDec' );
 	}
 
 	/**
@@ -393,8 +327,6 @@ class CompilationEngine {
 	 */
 	private function compileStatements() {
 		$writingStatements = true;
-		$this->writeHeaderOpen( 'statements' );
-		$this->addSpaces();
 		while ( $writingStatements ) {
 			switch ( $this->currentToken ) {
 				case '}':
@@ -416,15 +348,12 @@ class CompilationEngine {
 					$this->compileReturn();
 					break;
 				default:
-					$this->writeToken( $this->currentTokenType, $this->currentToken );
 					break;
 			}
 			if ( $writingStatements ) {
 				$this->advance();
 			}
 		}
-		$this->removeSpaces();
-		$this->writeHeaderClose( 'statements' );
 	}
 
 	/**
@@ -434,9 +363,6 @@ class CompilationEngine {
 		$writingToLet = true;
 		$var = '';
 		$arr = false;
-		$this->writeHeaderOpen( 'letStatement' );
-		$this->addSpaces();
-		$this->writeToken( $this->currentTokenType, $this->currentToken );
 		while ( $writingToLet ) {
 			$this->advance();
 			switch ( $this->currentToken ) {
@@ -471,7 +397,6 @@ class CompilationEngine {
 					} elseif (  $this->classTable->kindOf( $var ) == 'static' ) {
 						$this->VMWriter->writePush( 'static', $this->classTable->indexOf( $var ) );
 					}
-					//$this->VMWriter->writePush( $this->subroutineTable->kindOf( $var ), $this->subroutineTable->indexOf( $var ) );
 					$this->handleArray();
 					$this->advance();
 					$this->compileExpression();
@@ -583,8 +508,6 @@ class CompilationEngine {
 				break;
 			}
 		}
-		$this->removeSpaces();
-		$this->writeHeaderClose( 'whileStatement' );
 	}
 
 	/**
@@ -620,8 +543,6 @@ class CompilationEngine {
 					break;
 			}
 		}
-		$this->removeSpaces();
-		$this->writeHeaderClose( 'doStatement' );
 	}
 
 	/**
@@ -650,8 +571,6 @@ class CompilationEngine {
 					break;
 			}
 		}
-		$this->removeSpaces();
-		$this->writeHeaderClose( 'returnStatement' );
 	}
 
 	/**
@@ -956,56 +875,6 @@ class CompilationEngine {
 		$this->argCount = 0;
 	}
 
-	/**
-	 * Write the token to the output file.
-	 * @param string $tokenType The type of token.
-	 * @param string $token The token.
-	 */
-	private function writeToken( $tokenType, $token ) {
-		//fwrite( $this->outputHandle, "$this->tabs" . "<$tokenType> $token </$tokenType>\n" );
-	}
-
-	/**
-	 * Write the opening XML tag to the output file.
-	 * @param string $header The header to write.
-	 */
-	private function writeHeaderOpen( $header ) {
-		//fwrite( $this->outputHandle, "$this->tabs" . "<$header>\n" );
-	}
-
-	/**
-	 * Close out the XML tag to the output file.
-	 * @param string $header The header to write.
-	 */
-	private function writeHeaderClose( $header ) {
-		//fwrite( $this->outputHandle, "$this->tabs" . "</$header>\n" );
-	}
-
-	private function writeIdentify( $name, $category, $index  ) {
-		return;
-		/** 
-		$usage = '';
-		if ( $category == 'static' || $category == 'field' || $category == 'var' ) {
-			$usage = 'declared';
-		} else {
-			$usage = 'used';
-		}
-
-		if ( in_array( $name, $this->subroutineTable->table ) ) {
-			$usage = 'used';
-		}
-		fwrite( $this->outputHandle, 
-			"<IDENTIFIER_INFO>\n" .
-			"\t name: " . $name . "\n" .
-			"\t category: " . $category . "\n" .
-			"\t index: " . $index . "\n" .
-			"\t usage: " . $usage . "\n" .
-		 	"</IDENTIFIER_INFO>\n" );
-			*/
-	}
-
-	private function codeWrite( $exp ) {
-	}
 }
 
 ?>
