@@ -1,0 +1,69 @@
+//Laby is a tile holder
+//Laby generation is fixed, it would be hard to randomize
+class Laby {
+	
+	field Array tiles;
+
+	constructor Laby new() {
+		var int i, length;
+		var Tile tile;
+		let i = 0;
+		let length = 36;
+		let tiles = Array.new(length);
+		//Build tiles with barriers
+		//top, right, bot, left, is_win
+		//First row
+		let tiles[0] = Tile.new(true, false, false, true, false);
+		let tiles[1] = Tile.new(true, true, true, false, false);
+		let tiles[2] = Tile.new(true, true, false, true, false);
+		let tiles[3] = Tile.new(true, false, false, true, false);
+		let tiles[4] = Tile.new(true, false, true, false, false);
+		let tiles[5] = Tile.new(true, true, false, false, false);
+		//Second row
+		let tiles[6] = Tile.new(false, false, false, true, false);
+		let tiles[7] = Tile.new(true, false, true, false, false);
+		let tiles[8] = Tile.new(false, true, true, false, false);
+		let tiles[9] = Tile.new(false, true, false, true, false);
+		let tiles[10] = Tile.new(true, false, true, true, false);
+		let tiles[11] = Tile.new(false, true, true, false, false);
+		//Third row
+		let tiles[12] = Tile.new(false, false, true, true, false);
+		let tiles[13] = Tile.new(true, false, true, false, false);
+		let tiles[14] = Tile.new(true, false, false, false, false);
+		let tiles[15] = Tile.new(false, false, true, false, false);
+		let tiles[16] = Tile.new(true, false, true, false, false);
+		let tiles[17] = Tile.new(true, true, false, false, false);
+		//Fourth row
+		let tiles[18] = Tile.new(true, false, false, true, false);
+		let tiles[19] = Tile.new(true, true, false, false, false);
+		let tiles[20] = Tile.new(false, true, false, true, false);
+		let tiles[21] = Tile.new(true, false, false, true, false);
+		let tiles[22] = Tile.new(true, false, true, false, false);
+		let tiles[23] = Tile.new(false, true, true, false, false);
+		//Fifth row
+		let tiles[24] = Tile.new(false, true, false, true, false);
+		let tiles[25] = Tile.new(false, false, true, true, false);
+		let tiles[26] = Tile.new(false, true, true, false, false);
+		let tiles[27] = Tile.new(false, false, true, true, false);
+		let tiles[28] = Tile.new(true, false, true, false, false);
+		let tiles[29] = Tile.new(true, true, false, false, false);
+		//Sixth row
+		let tiles[30] = Tile.new(false, false, true, true, false);
+		let tiles[31] = Tile.new(true, true, true, false, false);
+		let tiles[32] = Tile.new(true, false, true, true, true);
+		let tiles[33] = Tile.new(true, false, true, false, false);
+		let tiles[34] = Tile.new(true, false, true, false, false);
+		let tiles[35] = Tile.new(false, true, true, false, false);
+		while (i < length) {
+			let tile = tiles[i];
+			do tile.draw(i);
+			let i = i+1;
+		}
+		return this;
+
+	}
+
+	method Array getTiles() {
+		return tiles;
+	}
+}

@@ -1,0 +1,10 @@
+// Run main game
+class Main {
+
+	function void main(){
+		var LabyGame labygame;
+		let labygame = LabyGame.new();
+		do labygame.run();
+		return;
+	}
+}

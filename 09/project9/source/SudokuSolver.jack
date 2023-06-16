@@ -1,0 +1,208 @@
+class SudokuSolver {
+	field Array board;
+	field int N, n;
+	field Array rows, cols, boxes;
+	field boolean sudokuSolved;
+
+	constructor SudokuSolver new(Array aBoard) {
+		var Array elem1, elem2, elem4;
+		var int i, j;
+		let n = 3;
+		let N = n * n;
+		
+		let rows = Array.new(N);
+		let i = 0;
+		while (i < N) {
+			let elem1 = Array.new(N+1);
+			let j = 0;
+			while (j < (N+1)) {
+				let elem1[j] = 0;
+				let j = j + 1;
+			}
+			let rows[i] = elem1;
+			let i = i + 1;
+		}
+
+		let cols = Array.new(N);
+		let i = 0;
+		while (i < N) {
+			let elem2 = Array.new(N+1);
+			let j = 0;
+			while (j < (N+1)) {
+				let elem2[j] = 0;
+				let j = j + 1;
+			}
+			let cols[i] = elem2;
+			let i = i + 1;
+		}
+
+		let boxes = Array.new(N);
+		let i = 0;
+		while (i < N) {
+			let elem4 = Array.new(N+1);
+			let j = 0;
+			while (j < (N+1)) {
+				let elem4[j] = 0;
+				let j = j + 1;
+			}
+			let boxes[i] = elem4;
+			let i = i + 1;
+		}
+
+		let board = aBoard;
+		let sudokuSolved = false;
+		return this;
+	}
+
+	method boolean couldPlace(int d, int row, int col) {
+		var Array elem1, elem2, elem4;
+		var int idx, res, opt1, opt2, opt4;
+		let idx = ((row / n) * n) + (col / n);
+
+		let elem1 = rows[row];
+		let elem2 = cols[col];
+		let elem4 = boxes[idx];
+
+		let opt1 = elem1[d];
+		let opt2 = elem2[d];
+		let opt4 = elem4[d];
+
+		let res = opt1 + opt2 + opt4;
+		if (res = 0) {
+			return true;
+		}
+		return false;
+	}
+
+	method void placeNumber(int d, int row, int col) {
+		var Array elem1, elem2, elem4, elem;
+		var int idx;
+		let idx = ((row / n) * n) + (col / n);
+
+		let elem1 = rows[row];
+		let elem1[d] = elem1[d] + 1;
+
+		let elem2 = cols[col];
+		let elem2[d] = elem2[d] + 1;
+
+		let elem4 = boxes[idx];
+		let elem4[d] = elem4[d] + 1;
+
+		let elem = board[row];
+		let elem[col] = d;
+
+		return;
+	}
+
+	method void removeNumber(int d, int row, int col) {
+		var Array elem1, elem2, elem4, elem;
+		var int idx;
+		let idx = ((row / n) * n) + (col / n);
+
+		let elem1 = rows[row];
+		let elem1[d] = elem1[d] - 1;
+
+		let elem2 = cols[col];
+		let elem2[d] = elem2[d] - 1;
+
+		let elem4 = boxes[idx];
+		let elem4[d] = elem4[d] - 1;
+
+		let elem = board[row];
+		let elem[col] = 0;
+		return;
+	}
+
+	method void placeNextNumbers(int row, int col) {
+		if (col = (N-1)) {
+			if (row = (N-1)) {
+				let sudokuSolved = true;
+			} else {
+				do backtrack(row+1, 0);
+			}
+		} else {
+			if (col = (N-1)) {
+				do backtrack(row+1, 0);
+			} else {
+				do backtrack(row, col+1);
+			}
+		}
+		return;
+	}
+
+	method void backtrack(int row, int col) {
+		var Array elem;
+		var int d;
+		var boolean flag;
+		let elem = board[row];
+		if (elem[col] = 0) {
+			let d = 1;
+			while (d < 10) {
+				let flag = couldPlace(d, row, col);
+
+				if (flag) {
+					do placeNumber(d, row, col);
+					do placeNextNumbers(row, col);
+
+					if (~(sudokuSolved)) {
+						do removeNumber(d, row, col);
+					}
+				}
+				let d = d + 1;
+			}
+		} else {
+			do placeNextNumbers(row, col);
+		}
+		return;
+	}
+
+	method void solveSudoku() {
+		var Array elem;
+		var int i, j, d;
+
+		let i = 0;
+		while (i < N) {
+			let elem = board[i];
+			let j = 0;
+			while (j < (N+1)) {
+				if (~(elem[j] = 0)) {
+					let d = elem[j];
+					do placeNumber(d, i, j);
+				}
+				let j = j + 1;
+			}
+			let i = i + 1;
+		}
+		do backtrack(0, 0);
+		return;
+	}
+
+	method void printBoard() {
+		var Array row;
+		var int i, j, elem;
+		var char space;
+
+		let i = 0;
+		do Output.println();
+		while (i < N) {
+			let row = board[i];
+			let j = 0;
+			while (j < N) {
+				let elem = row[j];
+				do Output.printInt(elem);
+
+				let space = 32;
+				do Output.printChar(space);
+				let j = j + 1;
+			}
+			do Output.println();
+			let i = i + 1;
+		}
+		return;
+	}
+
+	method void dispose() {
+		do Memory.deAlloc(this);
+		return;
+	}
+}

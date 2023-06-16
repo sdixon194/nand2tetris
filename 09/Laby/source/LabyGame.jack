@@ -1,0 +1,83 @@
+//Laby game associates an Avatar to a Labyrinth
+class LabyGame {
+
+	field Laby laby;
+	field Avatar avatar;
+	field int direction;
+
+	constructor LabyGame new() {
+		let laby = Laby.new();
+		// set initial tile to 2 (starting with 0)
+		let avatar = Avatar.new(2);
+		return this;
+	}
+
+	method void run() {
+		var char key;
+		var boolean win;
+		let win = false;
+		//handle key presses until we win
+		while (~(win)) {
+			while (key = 0) {
+				let key = Keyboard.keyPressed();
+			}
+			if (key = 131) { let direction = 1;}
+			if (key = 133) { let direction = 2;}
+			if (key = 130) { let direction = 3;}
+			if (key = 132) { let direction = 4;}
+			// check if we reached the end tile after moving
+			let win = moveAvatar();
+			while (~(key = 0)) {
+				let key = Keyboard.keyPressed();
+			}
+		}
+		do Screen.clearScreen();
+		do Output.printString("Congratulations, you won!");
+		while (win){
+		do Sys.wait(1000);
+		}
+		return;
+	}
+
+	method boolean moveAvatar() {
+		var Tile tile;
+		var int tile_index;
+		var Array tiles;
+		var boolean barrier;
+		var boolean win;
+		let tiles = laby.getTiles();
+		//which tile are we standing on ?
+		let tile_index = avatar.getCurrentTileIndex();
+		let tile = tiles[tile_index];
+		//move Avatar based on key pressed, if no barrier 
+		if (direction = 1) { 
+			let barrier = tile.getBarrierTop();
+			if (~(barrier)) {
+				do avatar.moveUp(); 
+			}
+		}
+		if (direction = 2) { 
+			let barrier = tile.getBarrierBot();
+			if (~(barrier)) {
+				do avatar.moveDown(); 
+			}
+		}
+		if (direction = 3) { 
+			let barrier = tile.getBarrierLeft();
+			if (~(barrier)) {
+				do avatar.moveLeft(); 
+			}
+		}
+		if (direction = 4) { 
+			let barrier = tile.getBarrierRight();
+			if (~(barrier)) {
+				do avatar.moveRight(); 
+			}
+		}
+		// did we win ?
+		let tile_index = avatar.getCurrentTileIndex();
+		let tile = tiles[tile_index];
+		let win = tile.getWin();
+	return win;
+	}
+}

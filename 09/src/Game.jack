@@ -1,0 +1,322 @@
+class Game {
+
+    static int seed;
+    static Array board_locations;
+    field Array bombs;
+    field Array selected;
+
+    field int current_key;
+    field int last_key;
+    field int current_position;
+    field int last_position;
+    field int remaining;
+
+    field boolean start;
+    field boolean quit;
+    field boolean reset;
+    field boolean selection;
+    field boolean dead;
+    field int remaining;
+
+    constructor Game new() {        
+        // Initializes game and sets the board      
+
+        do initialize_board_locations();
+        do show_welcome_message();
+        return this;
+    }
+
+    function void init(){
+        // Initializes the required static variables for the class
+        let seed = 1;
+        return;
+    }
+
+    method void dispose() {
+        // Dispose of (deallocate) objects
+
+        do Memory.deAlloc(this);
+        return;
+    }
+
+    method int handle_input() {
+        // Starts, restarts, or terminates a game at any time
+        
+        var int key;
+        let key = Keyboard.keyPressed();
+
+        if (key = 81) { // Q
+            let quit = true;
+        }
+        if (key = 82) { // R
+            let reset = true;
+        }
+        if (key = 83) { // S
+            let start = true;
+        }
+        if (key = 32) { // SPACE
+            let selection = true;
+        }
+        return key;
+    }
+
+    method int handle_selector() {
+        var int key;
+        let key = Keyboard.keyPressed();
+
+        if (key = 130) { // Left-arrow
+            let current_position = current_position - 1;
+            if (current_position < 0) {
+                let current_position = 0;
+            }
+        }
+        if (key = 132) { // Right-arrow
+            let current_position = current_position + 1;
+            if (current_position > 31) {
+                let current_position = 31;
+            }
+        }
+        return key;
+    }
+    
+    method boolean play() {
+        
+        let last_key = 0;
+        let current_key = 1;
+        let current_position = 0;
+        let last_position = 0;
+
+        while (~quit) {            
+            
+            let current_key = handle_input();
+
+            // Avoid the issues of:
+            // 1) Current position incrementing by >1 when keys are held down
+            // 2) The Constant refreshing of graphics
+
+            
+            if (~(current_key=last_key)){
+                do handle_selector();
+            } 
+            
+            // If not selected, 
+            if (~(current_key=last_key)&(~selected[last_position])){
+                do Graphics.draw_empty_card(board_locations[last_position]);
+                do Graphics.draw_card(board_locations[last_position]);
+            }
+
+            if (~(current_key=last_key)&(~selected[current_position])){
+                do Graphics.draw_cell_selector(board_locations[current_position]);
+            }
+
+
+            if (
+                ~(current_key=last_key) &
+                (selection) &
+                (bombs[current_position]=11 &
+                (~selected[current_position])
+                )){
+
+                    do Graphics.draw_empty_card(board_locations[current_position]);
+                    do Graphics.draw_card(board_locations[current_position]);
+                    do Graphics.draw_bomb(board_locations[current_position]);
+                    
+                    let dead = true;
+                    let remaining = remaining - 1;
+                    let selected[current_position] = true;
+            }
+
+            if (
+                ~(current_key=last_key) &
+                (selection) &
+                (bombs[current_position]=99 &
+                (~selected[current_position])
+                )){
+
+                    do Graphics.draw_empty_card(board_locations[current_position]);
+                    do Graphics.draw_card(board_locations[current_position]);
+                    do Graphics.draw_check(board_locations[current_position]);
+                    
+                    let remaining = remaining - 1;
+                    let selected[current_position] = true;
+            }
+
+            if (start){
+                do start_game();
+                let start = false;
+            }
+
+            if (reset){
+                do start_game();
+                let reset = false;
+            }
+
+            if (remaining=6){
+                do winner();
+            }
+
+            if (dead){
+                do loser();
+            }
+
+            let selection = false;
+            let last_key = current_key;
+            let last_position = current_position;
+        }
+
+        return false;
+    }
+
+    method void start_game(){
+        // Starts game by cleaning screen and setting up board
+        
+        // Initialize game variables
+        let last_key = 0;
+        let current_key = 1;
+        let current_position = 0;
+        let last_position = 0;
+        let dead = false;
+        let quit = false;
+        let reset = false;
+        let start = false;
+        let selection = false;
+        let remaining = 32;
+        let selected = initialize_selected();
+
+        let seed = seed + 3;
+        do LCGRandom.setSeed(seed);
+        let bombs = RandomArray.getArray();
+
+        do Screen.clearScreen();
+        do Graphics.draw_board();
+        do show_instructions();
+        return;
+    }
+
+    method void winner(){
+        do Screen.clearScreen();
+        do Output.moveCursor(12, 20);
+        do Output.printString("You are a WINNER!!!!!.");
+        do ask_user();
+        return;
+    }
+
+    method void loser(){
+        do Graphics.draw_title_gameover(2058);
+        do Sys.wait(1000);
+        do Screen.clearScreen();
+        do Graphics.draw_title_gameover(2058);
+        do ask_user();
+        return;
+    }
+
+
+    method void ask_user(){
+        // Asks user what to do next
+        var int key;
+        
+        do Output.moveCursor(13, 20);
+        do Output.printString("Press S to PLAY AGAIN");
+        do Output.moveCursor(14, 20);
+        do Output.printString("Press Q to QUIT");
+        do Output.moveCursor(15, 20);
+        let key = Keyboard.readChar();        
+        if (key = 81) { // Q
+            let quit = true;
+        }
+        if (key = 83) { // S
+            let start = true;
+        }
+        return;
+    }
+
+    method void show_welcome_message() {
+        // Prints the welcome message onto the screen
+
+        do Output.printString("Welcome to MineSweeper: 'Boom or Bust Edition!'");
+        do Output.println();
+        do Output.println();
+        do Output.println();
+        do Output.printString("Brace yourself for a pixelated adventure where you'll navigate atreacherous minefield without losing any limbs.");
+        do Output.println();
+        do Output.println();
+        do Output.printString("Click wrong, and boom! It's a game of wits, luck, and occasionalexplosions.");
+        do Output.println();
+        do Output.println();
+        do Output.printString("Are you ready to outsmart the mines and claim victory?");
+        do Output.println();
+        do Output.println();
+        do Output.println();
+        do Output.printString("Press S to START");
+        do Output.println();
+        do Output.printString("Press Q ANYTIME to QUIT");
+        do Output.println();
+        do Output.printString("Press R to RESTART");
+        return;
+    }
+
+    method void show_instructions() {
+        // Shows instructions at bottom of the page
+
+        do Output.moveCursor(21, 0);
+        do Output.printString("Use LEFT & RIGHT-ARROWS to move spot selector.");
+        do Output.println();
+        do Output.printString("Then PRESS SPACE to click.");
+        return;
+    }
+    
+    method Array initialize_selected() {
+            // Initializes selected array to false
+            var Array arr;
+            var int counter;
+            
+            let arr = Array.new(32);
+            let counter = 0;
+
+            while (counter<32){
+                let arr[counter] = false;
+                let counter  = counter +1;
+            }        
+            return arr;
+        }
+
+    method void initialize_board_locations() {
+        // Stores the locations of the cards in the screen after experimentation
+
+        let board_locations = Array.new(32);
+        let board_locations[0] = 0;
+        let board_locations[1] = 4;
+        let board_locations[2] = 8;
+        let board_locations[3] = 12;
+        let board_locations[4] = 16;
+        let board_locations[5] = 20;
+        let board_locations[6] = 24;
+        let board_locations[7] = 28;
+        let board_locations[8] = 1600;
+        let board_locations[9] = 1604;
+        let board_locations[10] = 1608;
+        let board_locations[11] = 1612;
+        let board_locations[12] = 1616;
+        let board_locations[13] = 1620;
+        let board_locations[14] = 1624;
+        let board_locations[15] = 1628;
+        let board_locations[16] = 3200;
+        let board_locations[17] = 3204;
+        let board_locations[18] = 3208;
+        let board_locations[19] = 3212;
+        let board_locations[20] = 3216;
+        let board_locations[21] = 3220;
+        let board_locations[22] = 3224;
+        let board_locations[23] = 3228;
+        let board_locations[24] = 4800;
+        let board_locations[25] = 4804;
+        let board_locations[26] = 4808;
+        let board_locations[27] = 4812;
+        let board_locations[28] = 4816;
+        let board_locations[29] = 4820;
+        let board_locations[30] = 4824;
+        let board_locations[31] = 4828;
+        return;
+    }
+
+}

@@ -1,0 +1,78 @@
+class Tile {
+
+	field boolean barrier_top;
+	field boolean barrier_left;
+	field boolean barrier_right;
+	field boolean barrier_bot;
+	field boolean is_win;
+
+	constructor Tile new(boolean top, boolean right, boolean bot, boolean left, boolean win) {
+		let barrier_top = top;
+		let barrier_left = left;
+		let barrier_right = right;
+		let barrier_bot = bot;
+		let is_win = win;
+		return this;
+	}
+
+	method boolean getBarrierTop() {
+		return barrier_top;
+	}
+
+	method boolean getBarrierBot() {
+		return barrier_bot;
+	}
+
+	method boolean getBarrierLeft() {
+		return barrier_left;
+	}
+
+	method boolean getBarrierRight() {
+		return barrier_right;
+	}
+
+	method boolean getWin() {
+		return is_win;
+	}
+
+	method int modulo(int x, int a) {
+		var int denom;
+		if (x < a) {
+			return x;
+		}
+		let denom = x / a;
+		return x - (denom * a);
+
+	}
+
+	method void draw(int index) {
+		//find first pixel
+		var int x, y;
+		//draw tiles as a square, not single line
+		let x = 16 * modulo(index, 6);
+		let y = 16 * (index / 6 );
+		//draw barriers
+		if (barrier_top) {
+			do Screen.drawLine(x, y, x+16, y);
+		}
+		let x = x +16;
+		if (barrier_right) {
+			do Screen.drawLine(x, y, x, y + 16);
+		}
+		let y = y+16;
+		if (barrier_bot) {
+			do Screen.drawLine(x, y, x-16, y);
+		}
+		let x = x -16;
+		if (barrier_left) {
+			do Screen.drawLine(x, y, x, y-16);
+		}
+		let y = y -16;
+		// draw specific pattern on the "win" tile
+		if (is_win) {
+			do Screen.drawLine(x+3, y+3, x+10, y+10);
+			do Screen.drawLine(x+3, y+10, x+10, y+3);
+		}
+		return;
+	}
+}

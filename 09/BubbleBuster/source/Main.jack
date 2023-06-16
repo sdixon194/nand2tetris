@@ -1,0 +1,11 @@
+/** Initializes a new Bubble buster game and starts running it. */
+class Main {
+    function void main() {
+        var BubbleGame game;
+		do BubbleGame.newInstance();
+        let game = BubbleGame.getInstance();
+        do game.run();
+        do game.dispose();
+        return;
+    }
+}

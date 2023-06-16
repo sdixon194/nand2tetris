@@ -1,0 +1,169 @@
+function Avatar.new 0
+push constant 1
+call Memory.alloc 1
+pop pointer 0
+push argument 0
+pop this 0
+push pointer 0
+call Avatar.draw 1
+pop temp 0
+push pointer 0
+return
+function Avatar.getCurrentTileIndex 0
+push argument 0
+pop pointer 0
+push this 0
+return
+function Avatar.modulo 1
+push argument 0
+pop pointer 0
+push argument 1
+push argument 2
+lt
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+push argument 1
+return
+label IF_FALSE0
+push argument 1
+push argument 2
+call Math.divide 2
+pop local 0
+push argument 1
+push local 0
+push argument 2
+call Math.multiply 2
+sub
+return
+function Avatar.draw 2
+push argument 0
+pop pointer 0
+push constant 16
+push pointer 0
+push this 0
+push constant 6
+call Avatar.modulo 3
+call Math.multiply 2
+pop local 0
+push constant 16
+push this 0
+push constant 6
+call Math.divide 2
+call Math.multiply 2
+pop local 1
+push constant 0
+not
+call Screen.setColor 1
+pop temp 0
+push local 0
+push constant 4
+add
+push local 1
+push constant 4
+add
+push local 0
+push constant 10
+add
+push local 1
+push constant 10
+add
+call Screen.drawRectangle 4
+pop temp 0
+push constant 0
+return
+function Avatar.undraw 2
+push argument 0
+pop pointer 0
+push constant 16
+push pointer 0
+push this 0
+push constant 6
+call Avatar.modulo 3
+call Math.multiply 2
+pop local 0
+push constant 16
+push this 0
+push constant 6
+call Math.divide 2
+call Math.multiply 2
+pop local 1
+push constant 0
+call Screen.setColor 1
+pop temp 0
+push local 0
+push constant 4
+add
+push local 1
+push constant 4
+add
+push local 0
+push constant 10
+add
+push local 1
+push constant 10
+add
+call Screen.drawRectangle 4
+pop temp 0
+push constant 0
+return
+function Avatar.moveUp 0
+push argument 0
+pop pointer 0
+push pointer 0
+call Avatar.undraw 1
+pop temp 0
+push this 0
+push constant 6
+sub
+pop this 0
+push pointer 0
+call Avatar.draw 1
+pop temp 0
+push constant 0
+return
+function Avatar.moveDown 0
+push argument 0
+pop pointer 0
+push pointer 0
+call Avatar.undraw 1
+pop temp 0
+push this 0
+push constant 6
+add
+pop this 0
+push pointer 0
+call Avatar.draw 1
+pop temp 0
+push constant 0
+return
+function Avatar.moveLeft 0
+push argument 0
+pop pointer 0
+push pointer 0
+call Avatar.undraw 1
+pop temp 0
+push this 0
+push constant 1
+sub
+pop this 0
+push pointer 0
+call Avatar.draw 1
+pop temp 0
+push constant 0
+return
+function Avatar.moveRight 0
+push argument 0
+pop pointer 0
+push pointer 0
+call Avatar.undraw 1
+pop temp 0
+push this 0
+push constant 1
+add
+pop this 0
+push pointer 0
+call Avatar.draw 1
+pop temp 0
+push constant 0
+return

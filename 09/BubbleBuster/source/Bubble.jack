@@ -1,0 +1,109 @@
+class Bubble {
+	field int x, y;
+	field int radius;
+	field int direction; // 1 = up, 2 = right, 3 = down, 4 = left
+
+	/* Creates a new bubble. */
+	constructor Bubble new(int xA, int yA, int radiusA, int directionA) {
+		let x = xA;
+		let y = yA;
+		let radius = radiusA;
+		if ( x < 16 ) {
+			let x = 16;
+		}
+		if ( x > 496 ) {
+			let x = 496;
+		}
+		if ( y < 16 ) {
+			let y = 16;
+		}
+		if ( y > 234 ) {
+			let y = 234;
+		}
+		let direction = directionA;
+		do drawBubble();
+		return this;
+	}
+
+	/* Draws the bubble */
+	method void drawBubble() {
+		do Screen.setColor(true);
+		do Screen.drawCircle(x, y, radius);
+		return;
+	}
+
+	/* Returns the x coordinate of the bubble. */
+	method int bubbleX() {
+		return x;
+	}
+
+	/* Returns the y coordinate of the bubble. */
+	method int bubbleY() {
+		return y;
+	}
+
+	/* Returns the radius of the bubble. */
+	method int bubbleRadius() {
+		return radius;
+	}
+
+	/* Moves the bubble */
+	method void move() {
+		do eraseBubble();
+		// moving up
+		if ( direction = 1 ) {
+			let y = y - 16;
+			if ( y - radius < 16 ) {
+				let y = y + 16;
+				let direction = 3;
+			}
+			do drawBubble();
+		} else {
+			// moving right
+			if ( direction = 2 ) {
+				let x = x + 16;
+				if ( x + radius > 512 ) {
+					let direction = 4;
+					let x = x - 16;
+				}
+				do drawBubble();
+			} else {
+				// moving down
+				if ( direction = 3 ) {
+					let y = y + 16;
+					if ( y + radius > 250 ) {
+						let y = y - 16;
+						let direction = 1;
+					}
+					do drawBubble();
+				} else {
+					// moving left
+					if ( direction = 4 ) {
+						let x = x - 16;
+						if ( x - radius < 16 ) {
+							let x = x + 16;
+							let direction = 2;
+						}
+						do drawBubble();
+					}
+				}
+			}
+		}
+		return;
+	}
+
+	/* Erases the bubble */
+	method void eraseBubble() {
+		do Screen.setColor(false);
+		do Screen.drawCircle(x, y, radius);
+		return;
+	}
+
+	
+	method void destroyBubble() {
+		do eraseBubble();
+		do Memory.deAlloc(this);
+		return;
+	}
+	
+}

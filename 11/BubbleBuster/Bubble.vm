@@ -1,0 +1,242 @@
+function Bubble.new 0
+push constant 4
+call Memory.alloc 1
+pop pointer 0
+push argument 0
+pop this 0
+push argument 1
+pop this 1
+push argument 2
+pop this 2
+push this 0
+push constant 16
+lt
+not
+if-goto label2
+push constant 16
+pop this 0
+goto label1
+label label2
+label label1
+push this 0
+push constant 496
+gt
+not
+if-goto label4
+push constant 496
+pop this 0
+goto label3
+label label4
+label label3
+push this 1
+push constant 16
+lt
+not
+if-goto label6
+push constant 16
+pop this 1
+goto label5
+label label6
+label label5
+push this 1
+push constant 234
+gt
+not
+if-goto label8
+push constant 234
+pop this 1
+goto label7
+label label8
+label label7
+push argument 3
+pop this 3
+push pointer 0
+call Bubble.drawBubble 1
+pop temp 0
+push pointer 0
+return
+function Bubble.drawBubble 0
+push argument 0
+pop pointer 0
+push constant 1
+neg
+call Screen.setColor 1
+pop temp 0
+push this 0
+push this 1
+push this 2
+call Screen.drawCircle 3
+pop temp 0
+push constant 0
+return
+function Bubble.bubbleX 0
+push argument 0
+pop pointer 0
+push this 0
+return
+function Bubble.bubbleY 0
+push argument 0
+pop pointer 0
+push this 1
+return
+function Bubble.bubbleRadius 0
+push argument 0
+pop pointer 0
+push this 2
+return
+function Bubble.move 0
+push argument 0
+pop pointer 0
+push pointer 0
+call Bubble.eraseBubble 1
+pop temp 0
+push this 3
+push constant 1
+eq
+not
+if-goto label10
+push this 1
+push constant 16
+sub
+pop this 1
+push this 1
+push this 2
+sub
+push constant 16
+lt
+not
+if-goto label12
+push this 1
+push constant 16
+add
+pop this 1
+push constant 3
+pop this 3
+goto label11
+label label12
+label label11
+push pointer 0
+call Bubble.drawBubble 1
+pop temp 0
+goto label9
+label label10
+push this 3
+push constant 2
+eq
+not
+if-goto label14
+push this 0
+push constant 16
+add
+pop this 0
+push this 0
+push this 2
+add
+push constant 512
+gt
+not
+if-goto label16
+push constant 4
+pop this 3
+push this 0
+push constant 16
+sub
+pop this 0
+goto label15
+label label16
+label label15
+push pointer 0
+call Bubble.drawBubble 1
+pop temp 0
+goto label13
+label label14
+push this 3
+push constant 3
+eq
+not
+if-goto label18
+push this 1
+push constant 16
+add
+pop this 1
+push this 1
+push this 2
+add
+push constant 250
+gt
+not
+if-goto label20
+push this 1
+push constant 16
+sub
+pop this 1
+push constant 1
+pop this 3
+goto label19
+label label20
+label label19
+push pointer 0
+call Bubble.drawBubble 1
+pop temp 0
+goto label17
+label label18
+push this 3
+push constant 4
+eq
+not
+if-goto label22
+push this 0
+push constant 16
+sub
+pop this 0
+push this 0
+push this 2
+sub
+push constant 16
+lt
+not
+if-goto label24
+push this 0
+push constant 16
+add
+pop this 0
+push constant 2
+pop this 3
+goto label23
+label label24
+label label23
+push pointer 0
+call Bubble.drawBubble 1
+pop temp 0
+goto label21
+label label22
+label label21
+label label17
+label label13
+label label9
+push constant 0
+return
+function Bubble.eraseBubble 0
+push argument 0
+pop pointer 0
+push constant 0
+call Screen.setColor 1
+pop temp 0
+push this 0
+push this 1
+push this 2
+call Screen.drawCircle 3
+pop temp 0
+push constant 0
+return
+function Bubble.destroyBubble 0
+push argument 0
+pop pointer 0
+push pointer 0
+call Bubble.eraseBubble 1
+pop temp 0
+push pointer 0
+call Memory.deAlloc 1
+pop temp 0
+push constant 0
+return

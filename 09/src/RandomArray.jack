@@ -1,0 +1,65 @@
+class RandomArray {
+
+    function Array getArray(){
+
+        var Array x;
+        var int n_bombs;
+        
+        let x = RandomArray.initialize_array();
+        let n_bombs = 0;
+
+
+        while (n_bombs<6){
+            let x = RandomArray.place_bomb(x, LCGRandom.randRange(0, 32));
+            let n_bombs  = n_bombs + 1;
+        }
+        return x;
+    }
+
+    function Array initialize_array() {
+        // Initializes array to 99 (no bombs locations.)
+        var Array arr;    
+        var int counter;
+        
+        let arr = Array.new(32);
+        let counter = 0;
+
+        while (counter<32){
+            let arr[counter] = 99;
+            let counter  = counter +1;
+        }        
+        return arr;
+    }
+
+    function Array place_bomb(Array arr, int i){
+        // Adds bomb (i.e, = -1) to location i if it doesnt have a bomb already
+        var boolean exit;
+        var int offset;
+
+        if (i>15){
+            let offset = 1;
+        }
+        else {
+            let offset = -1;
+        }
+
+        let exit = false;
+        
+        while (~exit){
+
+            if (arr[i]=11){
+                let i = i + offset;
+            }
+            else {
+                let arr[i]=11;
+                let exit = true;
+            }
+            
+            // Ensure `i` is within bounds
+            if ((i>31)|(i<0)){
+                let i = 0;
+            }
+        return arr;
+        }
+    }
+}

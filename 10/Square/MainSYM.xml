@@ -1,0 +1,358 @@
+<class>
+  <keyword> class </keyword>
+  <identifier> Main </identifier>
+<IDENTIFIER_INFO>
+	 name: Main
+	 category: class
+	 index: n/a
+	 usage: used
+</IDENTIFIER_INFO>
+  <symbol> { </symbol>
+  <classVarDec>
+    <keyword> static </keyword>
+    <keyword> boolean </keyword>
+    <identifier> test </identifier>
+<IDENTIFIER_INFO>
+	 name: test
+	 category: static
+	 index: 0
+	 usage: declared
+</IDENTIFIER_INFO>
+    <symbol> ; </symbol>
+  </classVarDec>
+  <subroutineDec>
+    <keyword> function </keyword>
+    <keyword> void </keyword>
+    <identifier> main </identifier>
+<IDENTIFIER_INFO>
+	 name: main
+	 category: subroutine
+	 index: n/a
+	 usage: used
+</IDENTIFIER_INFO>
+    <symbol> ( </symbol>
+    <parameterList>
+    </parameterList>
+    <symbol> ) </symbol>
+    <subroutineBody>
+      <symbol> { </symbol>
+      <varDec>
+        <keyword> var </keyword>
+        <identifier> SquareGame </identifier>
+<IDENTIFIER_INFO>
+	 name: SquareGame
+	 category: subroutine
+	 index: n/a
+	 usage: used
+</IDENTIFIER_INFO>
+        <identifier> game </identifier>
+<IDENTIFIER_INFO>
+	 name: game
+	 category: var
+	 index: 0
+	 usage: declared
+</IDENTIFIER_INFO>
+        <symbol> ; </symbol>
+      </varDec>
+      <statements>
+        <letStatement>
+          <keyword> let </keyword>
+          <identifier> game </identifier>
+<IDENTIFIER_INFO>
+	 name: game
+	 category: let
+	 index: n/a
+	 usage: used
+</IDENTIFIER_INFO>
+          <symbol> = </symbol>
+          <expression>
+            <term>
+              <identifier> SquareGame </identifier>
+              <symbol> . </symbol>
+              <identifier> new </identifier>
+              <symbol> ( </symbol>
+              <expressionList>
+              </expressionList>
+              <symbol> ) </symbol>
+            </term>
+          </expression>
+          <symbol> ; </symbol>
+        </letStatement>
+        <doStatement>
+          <keyword> do </keyword>
+          <identifier> game </identifier>
+          <symbol> . </symbol>
+          <identifier> run </identifier>
+          <symbol> ( </symbol>
+          <expressionList>
+          </expressionList>
+          <symbol> ) </symbol>
+          <symbol> ; </symbol>
+        </doStatement>
+        <doStatement>
+          <keyword> do </keyword>
+          <identifier> game </identifier>
+          <symbol> . </symbol>
+          <identifier> dispose </identifier>
+          <symbol> ( </symbol>
+          <expressionList>
+          </expressionList>
+          <symbol> ) </symbol>
+          <symbol> ; </symbol>
+        </doStatement>
+        <returnStatement>
+          <keyword> return </keyword>
+          <symbol> ; </symbol>
+        </returnStatement>
+      </statements>
+      <symbol> } </symbol>
+    </subroutineBody>
+  </subroutineDec>
+  <subroutineDec>
+    <keyword> function </keyword>
+    <keyword> void </keyword>
+    <identifier> more </identifier>
+<IDENTIFIER_INFO>
+	 name: more
+	 category: subroutine
+	 index: n/a
+	 usage: used
+</IDENTIFIER_INFO>
+    <symbol> ( </symbol>
+    <parameterList>
+    </parameterList>
+    <symbol> ) </symbol>
+    <subroutineBody>
+      <symbol> { </symbol>
+      <varDec>
+        <keyword> var </keyword>
+        <keyword> int </keyword>
+        <identifier> i </identifier>
+<IDENTIFIER_INFO>
+	 name: i
+	 category: var
+	 index: 0
+	 usage: declared
+</IDENTIFIER_INFO>
+        <symbol> , </symbol>
+        <identifier> j </identifier>
+<IDENTIFIER_INFO>
+	 name: j
+	 category: var
+	 index: 1
+	 usage: declared
+</IDENTIFIER_INFO>
+        <symbol> ; </symbol>
+      </varDec>
+      <varDec>
+        <keyword> var </keyword>
+        <identifier> String </identifier>
+<IDENTIFIER_INFO>
+	 name: String
+	 category: subroutine
+	 index: n/a
+	 usage: used
+</IDENTIFIER_INFO>
+        <identifier> s </identifier>
+<IDENTIFIER_INFO>
+	 name: s
+	 category: var
+	 index: 2
+	 usage: declared
+</IDENTIFIER_INFO>
+        <symbol> ; </symbol>
+      </varDec>
+      <varDec>
+        <keyword> var </keyword>
+        <identifier> Array </identifier>
+<IDENTIFIER_INFO>
+	 name: Array
+	 category: subroutine
+	 index: n/a
+	 usage: used
+</IDENTIFIER_INFO>
+        <identifier> a </identifier>
+<IDENTIFIER_INFO>
+	 name: a
+	 category: var
+	 index: 3
+	 usage: declared
+</IDENTIFIER_INFO>
+        <symbol> ; </symbol>
+      </varDec>
+      <statements>
+        <ifStatement>
+          <keyword> if </keyword>
+          <symbol> ( </symbol>
+          <expression>
+            <term>
+              <keyword> false </keyword>
+            </term>
+          </expression>
+          <symbol> ) </symbol>
+          <symbol> { </symbol>
+          <statements>
+            <letStatement>
+              <keyword> let </keyword>
+              <identifier> s </identifier>
+<IDENTIFIER_INFO>
+	 name: s
+	 category: let
+	 index: n/a
+	 usage: used
+</IDENTIFIER_INFO>
+              <symbol> = </symbol>
+              <expression>
+                <term>
+                  <stringConstant> string constant </stringConstant>
+                </term>
+              </expression>
+              <symbol> ; </symbol>
+            </letStatement>
+            <letStatement>
+              <keyword> let </keyword>
+              <identifier> s </identifier>
+<IDENTIFIER_INFO>
+	 name: s
+	 category: let
+	 index: n/a
+	 usage: used
+</IDENTIFIER_INFO>
+              <symbol> = </symbol>
+              <expression>
+                <term>
+                  <keyword> null </keyword>
+                </term>
+              </expression>
+              <symbol> ; </symbol>
+            </letStatement>
+            <letStatement>
+              <keyword> let </keyword>
+              <identifier> a </identifier>
+<IDENTIFIER_INFO>
+	 name: a
+	 category: let
+	 index: n/a
+	 usage: used
+</IDENTIFIER_INFO>
+              <symbol> [ </symbol>
+              <expression>
+                <term>
+                  <integerConstant> 1 </integerConstant>
+                </term>
+              </expression>
+              <symbol> ] </symbol>
+              <symbol> = </symbol>
+              <expression>
+                <term>
+                  <identifier> a </identifier>
+                  <symbol> [ </symbol>
+                  <expression>
+                    <term>
+                      <integerConstant> 2 </integerConstant>
+                    </term>
+                  </expression>
+                  <symbol> ] </symbol>
+                </term>
+              </expression>
+              <symbol> ; </symbol>
+            </letStatement>
+          </statements>
+          <symbol> } </symbol>
+          <keyword> else </keyword>
+          <symbol> { </symbol>
+          <statements>
+            <letStatement>
+              <keyword> let </keyword>
+              <identifier> i </identifier>
+<IDENTIFIER_INFO>
+	 name: i
+	 category: let
+	 index: n/a
+	 usage: used
+</IDENTIFIER_INFO>
+              <symbol> = </symbol>
+              <expression>
+                <term>
+                  <identifier> i </identifier>
+                </term>
+                <symbol> * </symbol>
+                <term>
+                  <symbol> ( </symbol>
+                  <expression>
+                    <term>
+                      <symbol> - </symbol>
+                      <term>
+                        <identifier> j </identifier>
+                      </term>
+                    </term>
+                  </expression>
+                  <symbol> ) </symbol>
+                </term>
+              </expression>
+              <symbol> ; </symbol>
+            </letStatement>
+            <letStatement>
+              <keyword> let </keyword>
+              <identifier> j </identifier>
+<IDENTIFIER_INFO>
+	 name: j
+	 category: let
+	 index: n/a
+	 usage: used
+</IDENTIFIER_INFO>
+              <symbol> = </symbol>
+              <expression>
+                <term>
+                  <identifier> j </identifier>
+                </term>
+                <symbol> / </symbol>
+                <term>
+                  <symbol> ( </symbol>
+                  <expression>
+                    <term>
+                      <symbol> - </symbol>
+                      <term>
+                        <integerConstant> 2 </integerConstant>
+                      </term>
+                    </term>
+                  </expression>
+                  <symbol> ) </symbol>
+                </term>
+              </expression>
+              <symbol> ; </symbol>
+            </letStatement>
+            <letStatement>
+              <keyword> let </keyword>
+              <identifier> i </identifier>
+<IDENTIFIER_INFO>
+	 name: i
+	 category: let
+	 index: n/a
+	 usage: used
+</IDENTIFIER_INFO>
+              <symbol> = </symbol>
+              <expression>
+                <term>
+                  <identifier> i </identifier>
+                </term>
+                <symbol> | </symbol>
+                <term>
+                  <identifier> j </identifier>
+                </term>
+              </expression>
+              <symbol> ; </symbol>
+            </letStatement>
+          </statements>
+          <symbol> } </symbol>
+        </ifStatement>
+        <returnStatement>
+          <keyword> return </keyword>
+          <symbol> ; </symbol>
+        </returnStatement>
+      </statements>
+      <symbol> } </symbol>
+    </subroutineBody>
+  </subroutineDec>
+  <symbol> } </symbol>
+</class>

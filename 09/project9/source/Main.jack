@@ -1,0 +1,53 @@
+// Inputs a sudoku board & solves it.
+class Main {
+   function void main() {
+      var SudokuSolver sudokuSolver;
+      var Array board, row; 
+      var int length;
+      var int i, j;
+      var char elem;
+
+      do Output.printString("Input a sudoku board with empty cells as '.' characters. Here is a row as an example: 5 3 . . 7 . . . .");
+      do Output.println();
+      let board = Array.new(9);
+     
+      let i = 0;
+      while (i < 9) {
+      	 let row = Array.new(9);
+      	 let j = 0;
+      	 while (j < 9) {
+         	let elem = Keyboard.readChar();
+	 	if (elem > 48) {
+	 		if (elem < 58) {
+	 			let row[j] = elem - 48;
+         			let j = j + 1;
+			}
+	 	} 
+		if (elem = 46) {
+			let row[j] = 0;
+			let j = j + 1;
+		}
+	 }
+	 let board[i] = row;
+	 let i = i + 1;
+      }
+
+      let sudokuSolver = SudokuSolver.new(board);
+      do Output.println();
+      do Output.printString("Hang Tight. It may take several minutes to solve the Sudoku...");
+      do Output.println();
+
+      do sudokuSolver.solveSudoku();
+      do sudokuSolver.printBoard();
+      do sudokuSolver.dispose();
+
+      let i = 0;
+      while (i < 9) {
+      		let row = board[i];
+		do row.dispose();
+		let i = i + 1;
+      }
+      do board.dispose();
+      return;
+   }
+}

@@ -1,0 +1,73 @@
+class Avatar {
+
+	//Current tile the avatar is standing on
+	field int tile_index;
+
+	constructor Avatar new(int index) {
+		let tile_index = index;
+		do draw();
+		return this;
+	}
+
+	method int getCurrentTileIndex() {
+		return tile_index;
+	}
+
+	method int modulo(int x, int a) {
+		var int denom;
+		if (x < a) {
+			return x;
+		}
+		let denom = x / a;
+		return x - (denom * a);
+
+	}
+
+	// draw avatar on current tile
+	method void draw() {
+		var int x, y;
+		let x = 16 * modulo(tile_index, 6);
+		let y = 16 * (tile_index / 6 );
+		do Screen.setColor(true);
+		do Screen.drawRectangle(x+4, y+4, x+10, y+10);
+		return;
+	}
+
+	// empty previous tile 
+	method void undraw() {
+		var int x, y;
+		let x = 16 * modulo(tile_index, 6);
+		let y = 16 * (tile_index / 6 );
+		do Screen.setColor(false);
+		do Screen.drawRectangle(x+4, y+4, x+10, y+10);
+		return;
+	}
+
+	method void moveUp() {
+		do undraw();
+		let tile_index = tile_index - 6;
+		do draw();
+		return;
+	}
+
+	method void moveDown() {
+		do undraw();
+		let tile_index = tile_index + 6;
+		do draw();
+		return;
+	}
+
+	method void moveLeft() {
+		do undraw();
+		let tile_index = tile_index - 1;
+		do draw();
+		return;
+	}
+
+	method void moveRight() {
+		do undraw();
+		let tile_index = tile_index + 1;
+		do draw();
+		return;
+	}
+}

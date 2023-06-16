@@ -1,0 +1,113 @@
+class Bullet {
+	field int x, y;
+	field int direction; // 1 = up, 2 = right, 3 = down, 4 = left
+
+	/* Creates a new bullet */
+	constructor Bullet new(int xA, int yA, int directionA) {
+		let direction = directionA;
+		if ( direction = 1 ) {
+			let x = xA + 5;
+			let y = yA - 10;
+			if ( y < 0 ) {
+				let y = 240;
+			}
+		} else {
+			if ( direction = 2 ) {
+				let x = xA + 20;
+				let y = yA + 5;
+				if ( x > 512 ) {
+					let x = 0;
+				}
+			} else {
+				if ( direction = 3 ) {
+					let x = xA + 5;
+					let y = yA + 20;
+					if ( y > 240 ) {
+						let y = 0;
+					}
+				} else {
+					if ( direction = 4 ) {
+						let x = xA - 10;
+						let y = yA + 5;
+						if ( x < 0 ) {
+							let x = 500;
+						}
+					}
+				}
+			}
+		}
+		do drawBullet();
+		return this;
+	}
+
+	/* Returns the x coordinate of the bullet */
+	method int bulletX() {
+		return x;
+	}
+
+	/* Returns the y coordinate of the bullet */
+	method int bulletY() {
+		return y;
+	}
+
+	/* Draws the bullet */
+	method void drawBullet() {
+		do Screen.setColor( true );
+		do Screen.drawRectangle(x, y, (x + 4), (y + 4) );
+		return;
+	}
+
+	/* Moves the bullet */
+	method void move() {
+		do eraseBullet();
+		if ( direction = 1 ) {
+			let y = y - 16;
+			if ( y < 0 ) {
+				let y = 240;
+			}
+			do drawBullet();
+		} else {
+			// Moving right
+			if ( direction = 2 ) {
+				let x = x + 16;
+				if ( x > 512 ) {
+					let x = 0;
+				}
+				do drawBullet();
+			} else {
+				// Moving down
+				if ( direction = 3 ) {
+					let y = y + 16;
+					if ( y > 240 ) {
+						let y = 0;
+					}
+					do drawBullet();
+				} else {
+					// Moving left.
+					if ( direction = 4 ) {
+						let x = x - 16;
+						if ( x < 0 ) {
+							let x = 500;
+						}
+						do drawBullet();
+					}
+				}
+			}
+		}
+		return;
+	}
+
+	/* Erases the bullet */
+	method void eraseBullet() {
+		do Screen.setColor( false );
+		do Screen.drawRectangle(x, y, (x + 4), (y + 4) );
+		return;
+	}
+
+	/* Destroys the bullet */
+	method void destroyBullet() {
+		do eraseBullet();
+		do Memory.deAlloc(this);
+		return;
+	}
+}

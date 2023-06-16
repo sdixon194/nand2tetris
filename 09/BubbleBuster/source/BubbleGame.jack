@@ -1,0 +1,278 @@
+/**
+ Bubble Buster is a game where you play as a spaceship and shoot down the bubbles. 
+ Careful! You can only shoot one bullet at a time, so aim well. 
+ Running into the bubbles will kill you. 
+ Shooting a bubble will net you points based on how big the bubble is.
+ Another bubble will spawn in its place tho! 
+ The game is over when you run out of lives, which shouldn't be that hard since the hit box is tiny.
+*/
+class BubbleGame {
+
+	static BubbleGame instance; // the singelton, a Pong game instance 
+	field bool exit;
+
+	/* Initialize Player info*/
+	field Ship ship; // the bubble busting spaceship
+	field int direction; // the direction the ship is moving in ( 1=forward, 2=backward, 3=left, 4=right)
+	field int lives;
+	field int score;
+
+	/** Initialize Bullet **/ 
+	field Bullet bullet; // the bullet that the ship is shooting
+	field bool bulletFired;
+	field int bulletTime;
+
+	/** Initialize the Bubble Array */
+	field array bubbleArray; // the array of moves that need to be made.
+	field int bubbleIndex;
+	field int bubbleLength;
+	field int bubbleCount;
+	field int bubbleDirection;
+
+	/** Constructs a new Bubble Buster Game. */
+	constructor BubbleGame new() {
+		let exit = false;
+		let score = 0;
+		let lives = 3;
+		let bubbleDirection = 1;
+		let bulletTime = 0;
+		let bulletFired = false;
+		let bubbleCount = 0;
+		let bubbleIndex = 0;
+		let bubbleLength = 5;
+		let bubbleArray = Array.new(bubbleLength);
+		let ship = Ship.new();
+		do initializeBubbles();
+		do updateUI();
+		return this;
+	}
+
+	/** Updates the UI to reflect the current state of the game. */
+	method void updateUI() {
+		do Output.moveCursor( 0, 0 );
+		do Output.printString("Score: " );
+		do Output.printInt(score);
+		do Output.printString(" Lives: " );
+		do Output.printInt(lives);
+		return;
+	}
+
+	/** Respawns the ship, and decrements the number of lives. */
+	method void respawnShip() {
+		if ( lives > 0 ) {
+			let lives = lives - 1;
+			let ship = Ship.new();
+			do updateUI();
+		} else {
+			do gameOver();
+		}
+		return;
+	}
+
+	/** Ends the game. */
+	method void gameOver(){
+		do Output.moveCursor( 0, 0 );
+		do Output.printString("Game Over! Final Score: " );
+		do Output.printInt(score);
+		let exit = true;
+		return;
+	}
+
+	/** Creates an instance of BubbleBuster game, and stores it. */
+	function void newInstance() {
+		let instance = BubbleGame.new();
+		return;
+	}
+
+	/** Returns the single instance of this BubbleBuster game. */
+	function BubbleGame getInstance() {
+		return instance;
+	}
+	
+	/** Spawns a new bubble at the given index. */
+	method void spawnBubble( int index ) {
+		var Bubble bubble;
+		if ( bubbleDirection > 4 ) {
+			let bubbleDirection = 1;
+		}
+		let bubble = Bubble.new( 20, 20, 20, bubbleDirection );
+		let bubbleArray[index] = bubble;
+		let bubbleCount = bubbleCount + 1;
+		let bubbleDirection = bubbleDirection + 1;
+		return;
+	}
+
+	/** Initializes the bubbles at the beginning of the game */
+	method void initializeBubbles() {
+		var Bubble bubble;
+		var int i;
+		let i = 0;
+		while ( i < 3 ) {
+			let bubble = Bubble.new(  20, 20, 20, bubbleDirection );
+			let bubbleArray[bubbleIndex] = bubble;
+			let bubbleCount = bubbleCount + 1;
+			let bubbleIndex = bubbleIndex + 1;
+			let bubbleDirection = bubbleDirection + 1;
+			let i = i + 1;
+		}
+		return;
+	}
+
+	/** Runs the game */
+	method void run() {
+		var char key;  // the key currently pressed by the user
+
+		while (~exit) { // While we are not exiting the game, continue with this code.
+			// waits for a key to be pressed
+			while (key = 0) { // While key is not pressed, listen for a key. // Now key is pressed, so we exit.
+				let key = Keyboard.keyPressed(); // Once a key is pressed, store it in key.
+				do moveBubble();
+				do moveBullet();
+				do checkBubbleCollision();
+				do checkShipCollision();
+				do Sys.wait(80);
+			}
+			if (key = 81)  { let exit = true; }     // q key
+			if (key = 130) { do ship.turnLeft(); } // left arrow
+			if (key = 132) { do ship.turnRight(); }   // right arrow
+			if (key = 131) { do ship.moveForward(); } // up arrow
+			if (key = 133) { do ship.moveBackward(); } // down arrow
+			if (key = 32 ) {
+				if ( bulletFired = false ) {
+						let bullet = Bullet.new( ship.shipX(), ship.shipY(), ship.shipDirection() );
+						let bulletFired = true;
+					}
+				}
+
+			// Wait for key to be released.
+			while ((~(key = 0)) & (~exit)) { 
+				
+				let key = Keyboard.keyPressed();  
+
+				if (key = 131 ) {
+					while (Keyboard.keyPressed() = 131) {
+						do moveBubble();
+						do moveBullet();
+						do ship.moveForward();
+						do checkBubbleCollision();
+						do checkShipCollision();
+						do Sys.wait(50);
+					}
+				} else {
+					if (key = 133 ) {
+						while (Keyboard.keyPressed() = 133) {
+							do moveBubble();
+							do moveBullet();
+							do checkBubbleCollision();
+							do checkShipCollision();
+							do ship.moveBackward();
+							do Sys.wait(50);
+						}
+					}
+				}
+			}
+		}
+		if ( exit ) {
+			do gameOver();
+		}
+		return;
+	}
+
+	/* Move the bullet once it's fired */
+	method void moveBullet() {
+		if ( bulletFired = true ) {
+			if ( bulletTime < 14 ) {
+					do bullet.move();
+					let bulletTime = bulletTime + 1;
+				} else {
+					do bullet.destroyBullet();
+					let bulletTime = 0;
+					let bulletFired = false;
+				}
+		}
+		return;		
+	}
+
+	/* Move the bubbles */
+	method void moveBubble() {
+		var int i;
+		var Bubble currentBubble;
+		let i = 0;
+		while ( i < bubbleCount ) {
+			let currentBubble = bubbleArray[i];
+			do currentBubble.move();
+			let i = i + 1;
+		}
+		return;
+	}
+
+	/* Check for collisions between the bullet and the bubbles */
+	method void checkBubbleCollision() {
+		var int i, bulletX, bulletY, bubbleX, bubbleY, bubbleRadius;
+		var Bubble currentBubble;
+		let i = 0;
+		if ( bulletFired = true ) {
+			let bulletX = bullet.bulletX();	
+			let bulletY = bullet.bulletY();
+			while ( i < bubbleCount ) {
+				let currentBubble = bubbleArray[i];
+				let bubbleRadius = currentBubble.bubbleRadius();
+				let bubbleX = currentBubble.bubbleX();
+				let bubbleY = currentBubble.bubbleY();
+				if ( ( bulletX > ( bubbleX - bubbleRadius ) ) &
+					 ( bulletX < ( bubbleX + bubbleRadius ) ) &
+					 ( bulletY > ( bubbleY - bubbleRadius ) ) & 
+					 ( bulletY < ( bubbleY + bubbleRadius ) ) ) {
+						do currentBubble.destroyBubble();
+						do bullet.destroyBullet();
+						let bulletFired = false;
+						let bubbleCount = bubbleCount - 1;
+						let score = score + ( 5 * bubbleRadius );
+						do spawnBubble( i );
+						do updateUI();
+					}
+				let i = i + 1;
+			}
+		}
+		return;
+	}
+
+	/* Check if the ship is colliding with the bubbles */
+	method void checkShipCollision() {
+		var int i, shipX, shipY, bubbleX, bubbleY, bubbleRadius;
+		var Bubble currentBubble;
+		let i = 0;
+		let shipX = ship.shipX();
+		let shipY = ship.shipY();
+		while ( i < bubbleCount ) {
+			let currentBubble = bubbleArray[i];
+			let bubbleRadius = currentBubble.bubbleRadius();
+			let bubbleX = currentBubble.bubbleX();
+			let bubbleY = currentBubble.bubbleY();
+			if ( ( shipX > ( bubbleX - bubbleRadius ) ) &
+					( shipX < ( bubbleX + bubbleRadius ) ) &
+					( shipY > ( bubbleY - bubbleRadius ) ) & 
+					( shipY < ( bubbleY + bubbleRadius ) ) ) {
+					do ship.destroyShip();
+					do respawnShip();
+				}
+			let i = i + 1;
+		}
+		return;
+	}
+
+	/** Deallocates the memory used by this BubbleBuster game. */
+	method void dispose() {
+		var int i;
+		var Bubble currentBubble;
+		do ship.destroyShip();
+		let i = 0;
+		while ( i < bubbleCount ) {
+			let currentBubble = bubbleArray[i];
+			do currentBubble.destroyBubble();
+			let i = i + 1;
+		}
+		do Memory.deAlloc(this);
+		return;
+	}
+}

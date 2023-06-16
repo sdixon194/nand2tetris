@@ -1,0 +1,290 @@
+/** Implements the ship. */
+class Ship {
+
+	field int location; // screen location of the ship
+	field int x, y; // x and y coordinates of the ship
+	field int direction; // direction the ship is facing ( 1 = up, 2 = right, 3 = down, 4 = left)
+ 
+	/** Constructs a new ship in the center of the screen. */
+	constructor Ship new() {
+		let direction = 1;
+		let x = 256;
+		let y = 128;
+		let location = ( y * 32 ) + ( x / 16 );
+		do drawUp( location );
+		return this;
+	}
+
+	/** Returns the x coordinate of the ship. */
+	method int shipX() {
+		return x;
+	}
+
+	/** Returns the y coordinate of the ship. */
+	method int shipY() {
+		return y;
+	}
+
+	/** Returns the direction the ship is facing. */
+	method int shipDirection() {
+		return direction;
+	}
+
+	/** Fires a bullet from the front of the ship */
+	method void fireBullet() {
+		var Bullet bullet;
+		let bullet = Bullet.new( x, y, direction );
+		return;
+	}
+
+	/** Turns the ship left. */
+	method void turnLeft() {
+		if ( direction = 1 ) {
+			let direction = 4;
+			do drawLeft( location );
+		} 
+		else {
+			if ( direction = 4 ) {
+				let direction = 3;
+				do drawDown( location );
+			}
+			else {
+				if ( direction = 3 ) {
+					let direction = 2;
+					do drawRight( location );
+				}
+				else {
+					if ( direction = 2 ) {
+						let direction = 1;
+						do drawUp( location );
+					}
+				}
+			}
+		}
+		return;
+	}
+
+	/** Turns the ship right. */
+	method void turnRight() {
+		if ( direction = 1 ) {
+			let direction = 2;
+			do drawRight( location );
+		} 
+		else {
+			if ( direction = 2 ) {
+				let direction = 3;
+				do drawDown( location );
+			}
+			else {
+				if ( direction = 3 ) {
+					let direction = 4;
+					do drawLeft( location );
+				}
+				else {
+					if ( direction = 4 ) {
+						let direction = 1;
+						do drawUp( location );
+					}
+				}
+			}
+		}
+		return;
+	}
+
+	/** Moves the ship forward. */
+	method void moveForward() {
+		// Moving up
+		do clearLocation( location );
+		if ( direction = 1 ) {
+			let y = y - 16;
+			if ( y < 8 ) {
+				let y = 240;
+			}
+			let location = ( y * 32 ) + ( x / 16 );
+			do drawUp( location );
+		} else {
+			// Moving right
+			if ( direction = 2 ) {
+				let x = x + 16;
+				if ( x > 512 ) {
+					let x = 0;
+				}
+				let location = ( y * 32 ) + ( x / 16 );
+				do drawRight( location );
+			} else {
+				// Moving down
+				if ( direction = 3 ) {
+					let y = y + 16;
+					if ( y > 240 ) {
+						let y = 0;
+					}
+					let location = ( y * 32 ) + ( x / 16 );
+					do drawDown( location );
+				} else {
+					// Moving left.
+					if ( direction = 4 ) {
+						let x = x - 16;
+						if ( x < 10 ) {
+							let x = 512;
+						}
+						let location = ( y * 32 ) + ( x / 16 );
+						do drawLeft( location  );
+					}
+				}
+			}
+		}
+		return;
+	}
+
+	/** Moves the ship backward. */
+	method void moveBackward() {
+		// Moving up
+		do clearLocation( location );
+		if ( direction = 1 ) {
+			let y = y + 16;
+			if ( y > 240 ) {
+				let y = 0;
+			}
+			let location = ( y * 32 ) + ( x / 16 );
+			do drawUp( location );
+		} else {
+			// Moving right
+			if ( direction = 2 ) {
+				let x = x - 16;
+				let location = ( y * 32 ) + ( x / 16 );
+				do drawRight( location );
+			} else {
+				// Moving down
+				if ( direction = 3 ) {
+					let y = y - 16;
+					if ( y < 0 ) {
+						let y = 240;
+					}
+					let location = ( y * 32 ) + ( x / 16 );
+					do drawDown( location );
+				} else {
+					// Moving left.
+					if ( direction = 4 ) {
+						let x = x + 16;
+						let location = ( y * 32 ) + ( x / 16 );
+						do drawLeft( location  );
+					}
+				}
+			}
+		}
+		return;
+	}
+
+	/** Draws the ship on the screen. */
+	method void drawUp(int location) {
+		var int memAddress;
+		let memAddress = 16384+location;
+		do Memory.poke(memAddress+0, 128);
+		do Memory.poke(memAddress+32, 320);
+		do Memory.poke(memAddress+64, 544);
+		do Memory.poke(memAddress+96, 1040);
+		do Memory.poke(memAddress+128, 2056);
+		do Memory.poke(memAddress+160, 4100);
+		do Memory.poke(memAddress+192, 8194);
+		do Memory.poke(memAddress+224, 8188);
+		do Memory.poke(memAddress+256, 992);
+		do Memory.poke(memAddress+288, 0);
+		do Memory.poke(memAddress+320, 0);
+		do Memory.poke(memAddress+352, 0);
+		do Memory.poke(memAddress+384, 0);
+		do Memory.poke(memAddress+416, 0);
+		do Memory.poke(memAddress+448, 0);
+		do Memory.poke(memAddress+480, 0);
+		return;
+	}
+
+	/** Draws the ship on the screen when facing right. */
+	method void drawRight(int location) {
+		var int memAddress;
+		let memAddress = 16384+location;
+		do Memory.poke(memAddress+0, 0);
+		do Memory.poke(memAddress+32, 512);
+		do Memory.poke(memAddress+64, 1280);
+		do Memory.poke(memAddress+96, 2304);
+		do Memory.poke(memAddress+128, 4352);
+		do Memory.poke(memAddress+160, 8576);
+		do Memory.poke(memAddress+192, 16768);
+		do Memory.poke(memAddress+224, -32384);
+		do Memory.poke(memAddress+256, 16768);
+		do Memory.poke(memAddress+288, 8576);
+		do Memory.poke(memAddress+320, 4352);
+		do Memory.poke(memAddress+352, 2304);
+		do Memory.poke(memAddress+384, 1280);
+		do Memory.poke(memAddress+416, 512);
+		do Memory.poke(memAddress+448, 0);
+		do Memory.poke(memAddress+480, 0);
+		return;
+	}
+
+	/* Ship facing down */
+	method void drawDown(int location ) {
+		var int memAddress;
+		let memAddress = 16384+location;
+		do Memory.poke(memAddress+0, 0);
+		do Memory.poke(memAddress+32, 0);
+		do Memory.poke(memAddress+64, 0);
+		do Memory.poke(memAddress+96, 0);
+		do Memory.poke(memAddress+128, 0);
+		do Memory.poke(memAddress+160, 0);
+		do Memory.poke(memAddress+192, 0);
+		do Memory.poke(memAddress+224, 1984);
+		do Memory.poke(memAddress+256, 16376);
+		do Memory.poke(memAddress+288, 16388);
+		do Memory.poke(memAddress+320, 8200);
+		do Memory.poke(memAddress+352, 4112);
+		do Memory.poke(memAddress+384, 2080);
+		do Memory.poke(memAddress+416, 1088);
+		do Memory.poke(memAddress+448, 640);
+		do Memory.poke(memAddress+480, 256);
+		return;
+	}
+
+	/* Ship facing left */
+	method void drawLeft(int location ) {
+		var int memAddress;
+		let memAddress = 16384+location;
+		do Memory.poke(memAddress+0, 0);
+		do Memory.poke(memAddress+32, 0);
+		do Memory.poke(memAddress+64, 64);
+		do Memory.poke(memAddress+96, 160);
+		do Memory.poke(memAddress+128, 144);
+		do Memory.poke(memAddress+160, 136);
+		do Memory.poke(memAddress+192, 388);
+		do Memory.poke(memAddress+224, 386);
+		do Memory.poke(memAddress+256, 385);
+		do Memory.poke(memAddress+288, 386);
+		do Memory.poke(memAddress+320, 388);
+		do Memory.poke(memAddress+352, 136);
+		do Memory.poke(memAddress+384, 144);
+		do Memory.poke(memAddress+416, 160);
+		do Memory.poke(memAddress+448, 64);
+		do Memory.poke(memAddress+480, 0);
+		return;
+	}
+
+	/** Clears the location of the ship. */
+	method void clearLocation(int location) {
+		var int memAddress, i;
+		let memAddress = 16384 + location;
+	
+		// Set the memory values to 0 to clear the location
+		let i = 0;
+		while (i < 16 ) {
+			do Memory.poke( memAddress + (i * 32), 0);
+			let i = i + 1;
+		}
+		return;
+	}
+
+	/** Destroys the ship and deallocates it from memory. */
+	method void destroyShip() {
+		do clearLocation( location );
+		do Memory.deAlloc( this );
+		return;
+	}
+}

@@ -1,0 +1,182 @@
+function Tile.new 0
+push constant 5
+call Memory.alloc 1
+pop pointer 0
+push argument 0
+pop this 0
+push argument 3
+pop this 1
+push argument 1
+pop this 2
+push argument 2
+pop this 3
+push argument 4
+pop this 4
+push pointer 0
+return
+function Tile.getBarrierTop 0
+push argument 0
+pop pointer 0
+push this 0
+return
+function Tile.getBarrierBot 0
+push argument 0
+pop pointer 0
+push this 3
+return
+function Tile.getBarrierLeft 0
+push argument 0
+pop pointer 0
+push this 1
+return
+function Tile.getBarrierRight 0
+push argument 0
+pop pointer 0
+push this 2
+return
+function Tile.getWin 0
+push argument 0
+pop pointer 0
+push this 4
+return
+function Tile.modulo 1
+push argument 0
+pop pointer 0
+push argument 1
+push argument 2
+lt
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+push argument 1
+return
+label IF_FALSE0
+push argument 1
+push argument 2
+call Math.divide 2
+pop local 0
+push argument 1
+push local 0
+push argument 2
+call Math.multiply 2
+sub
+return
+function Tile.draw 2
+push argument 0
+pop pointer 0
+push constant 16
+push pointer 0
+push argument 1
+push constant 6
+call Tile.modulo 3
+call Math.multiply 2
+pop local 0
+push constant 16
+push argument 1
+push constant 6
+call Math.divide 2
+call Math.multiply 2
+pop local 1
+push this 0
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+push local 0
+push local 1
+push local 0
+push constant 16
+add
+push local 1
+call Screen.drawLine 4
+pop temp 0
+label IF_FALSE0
+push local 0
+push constant 16
+add
+pop local 0
+push this 2
+if-goto IF_TRUE1
+goto IF_FALSE1
+label IF_TRUE1
+push local 0
+push local 1
+push local 0
+push local 1
+push constant 16
+add
+call Screen.drawLine 4
+pop temp 0
+label IF_FALSE1
+push local 1
+push constant 16
+add
+pop local 1
+push this 3
+if-goto IF_TRUE2
+goto IF_FALSE2
+label IF_TRUE2
+push local 0
+push local 1
+push local 0
+push constant 16
+sub
+push local 1
+call Screen.drawLine 4
+pop temp 0
+label IF_FALSE2
+push local 0
+push constant 16
+sub
+pop local 0
+push this 1
+if-goto IF_TRUE3
+goto IF_FALSE3
+label IF_TRUE3
+push local 0
+push local 1
+push local 0
+push local 1
+push constant 16
+sub
+call Screen.drawLine 4
+pop temp 0
+label IF_FALSE3
+push local 1
+push constant 16
+sub
+pop local 1
+push this 4
+if-goto IF_TRUE4
+goto IF_FALSE4
+label IF_TRUE4
+push local 0
+push constant 3
+add
+push local 1
+push constant 3
+add
+push local 0
+push constant 10
+add
+push local 1
+push constant 10
+add
+call Screen.drawLine 4
+pop temp 0
+push local 0
+push constant 3
+add
+push local 1
+push constant 10
+add
+push local 0
+push constant 10
+add
+push local 1
+push constant 3
+add
+call Screen.drawLine 4
+pop temp 0
+label IF_FALSE4
+push constant 0
+return
